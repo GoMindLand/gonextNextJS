@@ -9,9 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@apollo/client": "^3.12.6",
+    "axios": "^1.7.9",
+    "bootstrap": "^5.3.3",
+    "graphql": "^16.10.0",
+    "graphql-tools": "^9.0.11",
+    "inversify": "^6.2.1",
+    "next": "15.1.4",
     "react": "^19.0.0",
+    "react-bootstrap": "^2.10.7",
     "react-dom": "^19.0.0",
-    "next": "15.1.4"
+    "reflect-metadata": "^0.2.2",
+    "sass": "^1.83.4"
   },
   "devDependencies": {
     "typescript": "^5",

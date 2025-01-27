@@ -1,0 +1,17 @@
+/* Navbar */
+.navbar {
+  background-color: $primary-color;
+  .nav-link {
+    color: $text-color;
+    &:hover {
+      color: $secondary-color;
+    }
+  }
+  .btn-primary {
+    background-color: $primary-color;
+    border-color: $primary-color;
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+  }
+}

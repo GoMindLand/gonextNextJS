@@ -1,0 +1,29 @@
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(to right, $primary-color 50%, $secondary-color 50%);
+  color: $text-color;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+
+  h1 {
+    font-weight: bold;
+  }
+
+  .btn-outline-light {
+    border-color: $text-color;
+    color: $text-color;
+    &:hover {
+      background-color: $text-color;
+      color: $primary-color;
+    }
+  }
+
+  a {
+    color: $text-color;
+    text-decoration: none;
+    &:hover {
+      color: $secondary-color;
+    }
+  }
+}
