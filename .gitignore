@@ -42,4 +42,4 @@ next-env.d.ts
 
 # webStorm
 .idea/
-generate_project_files.sh
+/src/generate_project_overview.sh
