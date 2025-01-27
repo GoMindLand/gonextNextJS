@@ -1,0 +1,10 @@
+@use 'bootstrap/scss/functions' as *;
+@use 'bootstrap/scss/variables' as *;
+@use 'bootstrap/scss/mixins' as *;
+@use 'bootstrap/scss/utilities' as *;
+
+// Importer les autres fichiers nécessaires
+@use 'bootstrap/scss/root' as *;
+@use 'bootstrap/scss/grid' as *;
+@use 'bootstrap/scss/reboot' as *;
+@use 'bootstrap/scss/forms' as *;
