@@ -1,0 +1,694 @@
+------ Project Tree ------
+|-- application
+    |-- dto
+    |-- services
+    |-- use-cases
+        |-- login.use-case.ts
+|-- config
+    |-- container.ts
+|-- domain
+    |-- entities
+    |-- interfaces
+        |-- login-repository.interface.ts
+    |-- value-objects
+|-- infrastructure
+    |-- database
+    |-- http
+    |-- repositories
+        |-- login.repository.ts
+    |-- utils
+|-- pages
+    |-- _app.tsx
+    |-- index.tsx
+    |-- login.tsx
+    |-- starter.tsx
+|-- presentation
+    |-- components
+        |-- footer.tsx
+        |-- navBar.tsx
+        |-- quarterComponent.tsx
+    |-- hooks
+    |-- layouts
+    |-- providers
+|-- shared
+    |-- config
+    |-- constants
+    |-- errors
+    |-- types
+    |-- utils
+
+
+------ File Contents ------
+
+
+------ Content of: ./application/use-cases/login.use-case.ts ------
+
+import { inject, injectable } from "inversify";
+import type { LoginRepositoryInterface } from "@/domain/interfaces/login-repository.interface";
+
+interface LoginUseCaseInput {
+    email: string;
+    password: string;
+}
+
+interface LoginUseCaseOutput {
+    success: boolean;
+    token?: string;
+    error?: string;
+}
+
+@injectable()
+export class LoginUseCase {
+
+    constructor(@inject("LoginRepositoryInterface") private loginRepository: LoginRepositoryInterface) {}
+
+    async execute(input: LoginUseCaseInput): Promise<LoginUseCaseOutput> {
+        const { email, password } = input;
+
+        const result = await this.loginRepository.login(email, password);
+        console.log(result);
+        // Simule une validation ou un appel à un repository/service
+        if (email === "user@example.com" && password === "password123") {
+            return {
+                success: true,
+                token: "fake-jwt-token",
+            };
+        }
+
+        return {
+            success: false,
+            error: "Invalid email or password",
+        };
+    }
+}
+
+
+
+------ Content of: ./config/container.ts ------
+
+import "reflect-metadata";
+import { Container } from "inversify";
+import { LoginRepository } from "@/infrastructure/repositories/login.repository";
+import { LoginUseCase } from "@/application/use-cases/login.use-case";
+
+// Création d'un nouveau conteneur Inversify
+const container = new Container();
+
+// Lier les interfaces aux implémentations
+container.bind<LoginRepository>("LoginRepositoryInterface").to(LoginRepository);
+container.bind<LoginUseCase>("LoginUseCase").to(LoginUseCase);
+
+export default container;
+
+
+
+------ Content of: ./domain/interfaces/login-repository.interface.ts ------
+
+export interface LoginRepositoryInterface {
+    login(email: string, password: string): Promise<{ token: string }>;
+}
+
+
+
+------ Content of: ./infrastructure/repositories/login.repository.ts ------
+
+import axios from "axios";
+import { LoginRepositoryInterface } from "@/domain/interfaces/login-repository.interface";
+import {injectable} from "inversify";
+
+@injectable()
+export class LoginRepository implements LoginRepositoryInterface {
+    async login(email: string, password: string): Promise<{ token: string }> {
+        const response = await axios.post("/api/login", { email, password });
+        return response.data;
+    }
+}
+
+
+
+------ Content of: ./pages/_app.tsx ------
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../presentation/styles/globals.scss';
+import type { AppProps } from 'next/app';
+import NavBar from "@/presentation/components/navBar";
+import Footer from "@/presentation/components/footer";
+
+function MyApp({ Component, pageProps }: AppProps) {
+    return (
+        <>
+            <NavBar />
+        <Component {...pageProps} />
+            <Footer />
+        </>
+    );
+}
+
+export default MyApp;
+
+
+
+------ Content of: ./pages/index.tsx ------
+
+import React from "react";
+
+const HomePage: React.FC = () => {
+    return (
+        <>
+            {/* Header Section */}
+            <header className="bg-dark">
+                <div className="container pt-4 pt-xl-5">
+                    <div className="row pt-5">
+                        <div className="col-md-8 col-xl-6 text-center text-md-start mx-auto">
+                            <div className="text-center">
+                                <h1 className="fw-bold">
+                                    Solution de gestion du Numérique responsable
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            {/* Services Section */}
+            <section>
+                <div className="container bg-dark py-5">
+                    <div className="row">
+                        <div className="col-md-8 col-xl-6 text-center mx-auto">
+                            <p className="fw-bold text-success mb-2">Our Services</p>
+                            <h3 className="fw-bold">What we can do for you</h3>
+                        </div>
+                    </div>
+                    <div className="py-5 p-lg-5">
+                        <div
+                            className="row row-cols-1 row-cols-md-2 mx-auto"
+                            style={{ maxWidth: "900px" }}
+                        >
+                            {Array.from({ length: 4 }).map((_, idx) => (
+                                <div key={idx} className="col mb-5">
+                                    <div className="card shadow-sm">
+                                        <div className="card-body px-4 py-5 px-md-5 position-relative">
+                                            <div
+                                                className="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon"
+                                                style={{
+                                                    top: "1rem",
+                                                    right: "1rem",
+                                                    position: "absolute",
+                                                }}
+                                            >
+                                                <svg
+                                                    className={`bi bi-${
+                                                        ["bell", "bezier", "pin-angle", "chat-quote"][
+                                                        idx % 4
+                                                            ]
+                                                    } text-success`}
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="1em"
+                                                    height="1em"
+                                                    fill="currentColor"
+                                                    viewBox="0 0 16 16"
+                                                >
+                                                    <path d="..." />
+                                                </svg>
+                                            </div>
+                                            <h5 className="fw-bold card-title">Lorem ipsum dolor sit</h5>
+                                            <p className="text-muted card-text mb-4">
+                                                Erat netus est hendrerit, nullam et quis ad cras
+                                                porttitor iaculis. Bibendum vulputate cras aenean.
+                                            </p>
+                                            <button className="btn btn-primary shadow" type="button">
+                                                Learn more
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Highlights Section */}
+            <section>
+                <div className="container py-5">
+                    <div className="mx-auto" style={{ maxWidth: "900px" }}>
+                        <div className="row row-cols-1 row-cols-md-2 d-flex justify-content-center">
+                            {[
+                                { color: "primary", bg: "bg-primary-light" },
+                                { color: "secondary", bg: "bg-secondary-light" },
+                                { color: "info", bg: "bg-info-light" },
+                            ].map(({ color, bg }, idx) => (
+                                <div key={idx} className="col mb-4">
+                                    <div className={`card ${bg}`}>
+                                        <div className="card-body text-center px-4 py-5 px-md-5">
+                                            <p className={`fw-bold text-${color} card-text mb-2`}>
+                                                Fully Managed
+                                            </p>
+                                            <h5 className="fw-bold card-title mb-3">
+                                                Lorem ipsum dolor sit nullam et quis ad cras porttitor
+                                            </h5>
+                                            <button
+                                                className={`btn btn-${color} btn-sm`}
+                                                type="button"
+                                            >
+                                                Learn more
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </>
+    );
+};
+
+export default HomePage;
+
+
+
+------ Content of: ./pages/login.tsx ------
+
+import React, { useState } from "react";
+import { LoginUseCase } from "@/application/use-cases/login.use-case";
+import container from "@/config/container";
+import {useRouter} from "next/router";
+
+const LoginPage: React.FC = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const router = useRouter();
+
+    const handleLogin = async () => {
+        setIsLoading(true);
+        setError(null);
+
+        const loginUseCase = container.get<LoginUseCase>("LoginUseCase");
+
+
+        try {
+            const result = await loginUseCase.execute({ email, password });
+            console.log(result);
+            if (result.success) {
+                console.log("Login successful:", result.token);
+                // Rediriger ou gérer l'état connecté ici
+                router.push("/starter");
+            } else {
+                router.push("/starter");
+                setError(result.error || "An unknown error occurred");
+            }
+        }
+        catch (error) {
+            console.error(error);
+            router.push("/starter");
+        }
+
+        setIsLoading(false);
+
+
+    };
+
+    return (
+        <section className="py-5">
+            <div className="container py-5">
+                <div className="row mb-4 mb-lg-5">
+                    <div className="col-md-8 col-xl-6 text-center mx-auto">
+                        <p className="fw-bold text-success mb-2">Se Connecter</p>
+                        <h2 className="fw-bold">Bienvenue</h2>
+                    </div>
+                </div>
+                <div className="row d-flex justify-content-center">
+                    <div className="col-md-6 col-xl-4">
+                        <div className="card">
+                            <div className="card-body text-center d-flex flex-column align-items-center">
+                                <div className="mb-3">
+                                    <input
+                                        className="form-control"
+                                        type="email"
+                                        name="email"
+                                        placeholder="Email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <input
+                                        className="form-control"
+                                        type="password"
+                                        name="password"
+                                        placeholder="Password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <button
+                                        className="btn btn-primary shadow d-block w-100"
+                                        onClick={handleLogin}
+                                        disabled={isLoading}
+                                    >
+                                        {isLoading ? "Chargement..." : "Se connecter"}
+                                    </button>
+                                </div>
+                                {error && <p className="text-danger">{error}</p>}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export default LoginPage;
+
+
+
+------ Content of: ./pages/starter.tsx ------
+
+import React from "react";
+import QuarterComponent from "@/presentation/components/quarterComponent";
+
+const StarterLoginPage: React.FC = () => {
+    const labels = [
+        "Quartier 1",
+        "Quartier 2",
+        "Quartier 3",
+        "Quartier 4",
+        "Quartier 5",
+        "Quartier 6",
+        "Quartier 7",
+        "Quartier 8",
+        "Quartier 9",
+        "poulet",
+    ];
+
+    return (
+        <>
+            <QuarterComponent numSegments={labels.length} labels={labels} radius={200} />
+        </>
+    );
+};
+
+export default StarterLoginPage;
+
+
+
+------ Content of: ./presentation/components/footer.tsx ------
+
+import React from 'react';
+
+const Footer: React.FC = () => {
+    return (
+        <footer className="bg-dark text-light">
+            <div className="container py-4 py-lg-5">
+                <div className="row justify-content-center">
+                    <div className="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column">
+                        <h3 className="fs-6 fw-bold">Services</h3>
+                        <ul className="list-unstyled">
+                            <li><a href="#" className="text-decoration-none text-light">Web design</a></li>
+                            <li><a href="#" className="text-decoration-none text-light">Development</a></li>
+                            <li><a href="#" className="text-decoration-none text-light">Hosting</a></li>
+                        </ul>
+                    </div>
+                    <div className="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column">
+                        <h3 className="fs-6 fw-bold">About</h3>
+                        <ul className="list-unstyled">
+                            <li><a href="#" className="text-decoration-none text-light">Company</a></li>
+                            <li><a href="#" className="text-decoration-none text-light">Team</a></li>
+                            <li><a href="#" className="text-decoration-none text-light">Legacy</a></li>
+                        </ul>
+                    </div>
+                    <div className="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column">
+                        <h3 className="fs-6 fw-bold">Careers</h3>
+                        <ul className="list-unstyled">
+                            <li><a href="#" className="text-decoration-none text-light">Job openings</a></li>
+                            <li><a href="#" className="text-decoration-none text-light">Employee success</a></li>
+                            <li><a href="#" className="text-decoration-none text-light">Benefits</a></li>
+                        </ul>
+                    </div>
+                    <div className="col-lg-3 text-center text-lg-start d-flex flex-column align-items-center order-first align-items-lg-start order-lg-last">
+                        <div className="fw-bold d-flex align-items-center mb-2">
+                            <span className="bs-icon-sm bs-icon-circle bs-icon-primary d-flex justify-content-center align-items-center bs-icon me-2">
+                                <svg
+                                    className="bi bi-bezier"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="1em"
+                                    height="1em"
+                                    fill="currentColor"
+                                    viewBox="0 0 16 16"
+                                >
+                                    <path
+                                        fillRule="evenodd"
+                                        d="M0 10.5A1.5 1.5 0 0 1 1.5 9h1A1.5 1.5 0 0 1 4 10.5v1A1.5 1.5 0 0 1 2.5 13h-1A1.5 1.5 0 0 1 0 11.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm10.5.5A1.5 1.5 0 0 1 13.5 9h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM6 4.5A1.5 1.5 0 0 1 7.5 3h1A1.5 1.5 0 0 1 10 4.5v1A1.5 1.5 0 0 1 8.5 7h-1A1.5 1.5 0 0 1 6 5.5zM7.5 4a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"
+                                    ></path>
+                                </svg>
+                            </span>
+                            <span>Brand</span>
+                        </div>
+                        <p className="text-muted">Sem eleifend donec molestie, integer quisque orci aliquam.</p>
+                    </div>
+                </div>
+                <hr />
+                <div className="text-muted d-flex justify-content-between align-items-center pt-3">
+                    <p className="mb-0">Copyright © 2025 Brand</p>
+                    <ul className="list-inline mb-0">
+                        <li className="list-inline-item">
+                            <svg
+                                className="bi bi-facebook"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="1em"
+                                height="1em"
+                                fill="currentColor"
+                                viewBox="0 0 16 16"
+                            >
+                                <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"></path>
+                            </svg>
+                        </li>
+                        <li className="list-inline-item">
+                            <svg
+                                className="bi bi-twitter"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="1em"
+                                height="1em"
+                                fill="currentColor"
+                                viewBox="0 0 16 16"
+                            >
+                                <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15"></path>
+                            </svg>
+                        </li>
+                        <li className="list-inline-item">
+                            <svg
+                                className="bi bi-instagram"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="1em"
+                                height="1em"
+                                fill="currentColor"
+                                viewBox="0 0 16 16"
+                            >
+                                <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"></path>
+                            </svg>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+    );
+};
+
+export default Footer;
+
+
+
+------ Content of: ./presentation/components/navBar.tsx ------
+
+import React from 'react';
+import { Navbar, Nav, Container, Button } from 'react-bootstrap';
+
+const NavBar: React.FC = () => {
+
+    return (
+        <Navbar id="mainNav" expand="md" sticky="top" className="py-3 navbar-dark bg-dark">
+            <Container>
+                <Navbar.Brand href="/" className="d-flex align-items-center">
+          <span>
+            <img
+                src="logo.png"
+                alt="Logo"
+                style={{ height: '40px' }}
+            />
+          </span>
+                </Navbar.Brand>
+                <Navbar.Toggle aria-controls="navcol-1" />
+                <Navbar.Collapse id="navcol-1">
+                    <Nav className="mx-auto">
+                        <Nav.Link href="/index.html" className="active">
+                        </Nav.Link>
+                        <Nav.Link href="/services.html">Services</Nav.Link>
+                        <Nav.Link href="/projects.html">Projects</Nav.Link>
+                        <Nav.Link href="/pricing.html">Pricing</Nav.Link>
+                        <Nav.Link href="/contacts.html">Contacts</Nav.Link>
+                    </Nav>
+                    <Button variant="primary" href="/login" className="shadow">
+                        Sign up
+                    </Button>
+                </Navbar.Collapse>
+            </Container>
+        </Navbar>
+    );
+};
+
+export default NavBar;
+
+
+
+------ Content of: ./presentation/components/quarterComponent.tsx ------
+
+import React from "react";
+
+interface QuarterComponentProps {
+    numSegments: number; // Nombre de quartiers
+    labels: string[]; // Tableau de légendes
+    radius?: number; // Rayon du cercle (optionnel)
+}
+
+const QuarterComponent: React.FC<QuarterComponentProps> = ({
+                                                               numSegments,
+                                                               labels,
+                                                               radius = 150, // Rayon par défaut augmenté
+                                                           }) => {
+    const center = radius + 50; // Calcul dynamique pour centrer correctement
+    const arrowLength = 60; // Longueur des flèches au-delà du cercle
+
+    if (labels.length !== numSegments) {
+        console.error("Le nombre de labels doit correspondre au nombre de segments.");
+        return null;
+    }
+
+    // Fonction pour générer les segments
+    const generateSegments = () => {
+        const angleStep = (2 * Math.PI) / numSegments;
+        const segments = [];
+
+        for (let i = 0; i < numSegments; i++) {
+            const startAngle = i * angleStep;
+            const endAngle = (i + 1) * angleStep;
+
+            const startX = center + radius * Math.cos(startAngle);
+            const startY = center + radius * Math.sin(startAngle);
+            const endX = center + radius * Math.cos(endAngle);
+            const endY = center + radius * Math.sin(endAngle);
+
+            const pathData = `
+        M ${center} ${center}
+        L ${startX} ${startY}
+        A ${radius} ${radius} 0 0 1 ${endX} ${endY}
+        Z
+      `;
+
+            segments.push(
+                <path
+                    key={i}
+                    d={pathData}
+                    fill={`hsl(${(i * 360) / numSegments}, 70%, 50%)`}
+                    stroke="white"
+                    strokeWidth="1"
+                />
+            );
+        }
+
+        return segments;
+    };
+
+    // Fonction pour générer les flèches et les légendes
+    const generateArrowsAndLabels = () => {
+        const angleStep = (2 * Math.PI) / numSegments;
+        const elements = [];
+
+        for (let i = 0; i < numSegments; i++) {
+            const angle = i * angleStep - angleStep / 2; // Centrer la flèche pour chaque segment
+
+            // Coordonnées à l'extérieur du cercle
+            const outerX = center + (radius + arrowLength) * Math.cos(angle);
+            const outerY = center + (radius + arrowLength) * Math.sin(angle);
+
+            // Coordonnées sur le cercle
+            const baseX = center + radius * Math.cos(angle);
+            const baseY = center + radius * Math.sin(angle);
+
+            // Légende positionnée juste après la flèche
+            const labelX = center + (radius + arrowLength + 20) * Math.cos(angle);
+            const labelY = center + (radius + arrowLength + 20) * Math.sin(angle);
+
+            // Détecter si le label doit être aligné à gauche, droite ou centré
+            const textAnchor =
+                Math.cos(angle) > 0.5
+                    ? "start"
+                    : Math.cos(angle) < -0.5
+                        ? "end"
+                        : "middle";
+
+            const alignmentBaseline =
+                Math.sin(angle) > 0.5
+                    ? "hanging"
+                    : Math.sin(angle) < -0.5
+                        ? "baseline"
+                        : "middle";
+
+            // Ajouter la flèche
+            elements.push(
+                <line
+                    key={`arrow-${i}`}
+                    x1={baseX}
+                    y1={baseY}
+                    x2={outerX}
+                    y2={outerY}
+                    stroke="white"
+                    strokeWidth="2"
+                />
+            );
+
+            // Ajouter la légende
+            elements.push(
+                <text
+                    key={`label-${i}`}
+                    x={labelX}
+                    y={labelY}
+                    fill="white"
+                    fontSize="14"
+                    textAnchor={textAnchor}
+                    alignmentBaseline={alignmentBaseline}
+                >
+                    {labels[i]}
+                </text>
+            );
+        }
+
+        return elements;
+    };
+
+    return (
+        <div
+            style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+                backgroundColor: "#1c1c1e",
+            }}
+        >
+            <svg width={center * 2} height={center * 2}>
+                {generateSegments()}
+                {generateArrowsAndLabels()}
+            </svg>
+        </div>
+    );
+};
+
+export default QuarterComponent;
+
+
