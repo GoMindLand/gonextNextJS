@@ -49,6 +49,7 @@ export class FetchHomePageUseCase {
               strong
             }
             Images {
+              Size
               Image {
                 documentId
                 name

@@ -1,4 +1,6 @@
 import React from "react";
+import Link from "next/link";
+import Image from "next/image";
 
 const Navbar = () => {
     return (
@@ -6,12 +8,14 @@ const Navbar = () => {
             <div className="container">
                 {/* Logo */}
                 <div className="navbar-brand">
-                    <link rel="stylesheet" href="/"/>
-                    <img
-                        src="LOGOS-GOMIND.png" // Remplacez par le chemin de votre logo
-                        alt="Logo"
-                        style={{ height: "40px" }}
-                    />
+                    <Link href="/">
+                        <Image
+                            src="/LOGOS-GOMIND.png"
+                            alt="Logo"
+                            width={40}
+                            height={40}
+                        />
+                    </Link>
                 </div>
 
                 {/* Burger Menu (pour mobile) */}
@@ -31,25 +35,25 @@ const Navbar = () => {
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav ms-auto">
                         <li className="nav-item">
-                            <a className="nav-link" href="#expertise">
+                            <Link className="nav-link" href="#expertise">
                                 Notre Expertise
-                            </a>
+                            </Link>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#organisation">
+                            <Link className="nav-link" href="#organisation">
                                 Organisation
-                            </a>
+                            </Link>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#jobboard">
+                            <Link className="nav-link" href="#jobboard">
                                 Job Board
-                            </a>
+                            </Link>
                         </li>
                     </ul>
                 </div>
 
                 {/* Bouton à droite */}
-                <a
+                <Link
                     className="btn btn-primary"
                     href="/blog"
                     style={{
@@ -58,7 +62,7 @@ const Navbar = () => {
                     }}
                 >
                     Notre Blog
-                </a>
+                </Link>
             </div>
         </nav>
     );

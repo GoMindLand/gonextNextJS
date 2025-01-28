@@ -94,6 +94,7 @@ export interface Description {
 
 export interface ImageElement {
     Image: Image;
+    Size?:  number;
     id:    string;
 }
 
