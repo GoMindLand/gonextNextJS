@@ -67,24 +67,34 @@ export interface Column {
     Cartes:      Carte[];
     Description: Description[];
     Images:      ImageElement[];
+    Bouton:      Bouton[];
     id:          string;
     name:        string;
-    size:        number;
+    sizeDesktop:       number;
+    sizeMobile:        number;
 }
 
 export interface Carte {
     Contenue: null;
     Titre:    string;
-    couleur:  null;
+    couleur:  string;
     id:       string;
+    strong: string;
 }
 
 export interface Description {
     Contenue: null | string;
     id:       string;
+    strong: string;
 }
 
 export interface ImageElement {
     Image: Image;
     id:    string;
+}
+
+export interface Bouton {
+    id:    string;
+    Link:  string;
+    Titre: string;
 }

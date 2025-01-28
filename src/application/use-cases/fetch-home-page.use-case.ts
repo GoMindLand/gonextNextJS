@@ -27,15 +27,22 @@ export class FetchHomePageUseCase {
           name
           id
           Column {
+            Bouton {
+              id
+              Link
+              Titre
+            }
             Cartes {
               Contenue
               Titre
               couleur
               id
+              strong
             }
             Description {
               Contenue
               id
+              strong
             }
             Images {
               Image {
@@ -62,7 +69,8 @@ export class FetchHomePageUseCase {
             }
             id
             name
-            size
+            sizeDesktop
+            SizeMobile
           }
         }
         BackgroundImage {
