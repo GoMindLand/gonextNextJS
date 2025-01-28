@@ -14,6 +14,7 @@ export interface Element {
     id:              string;
     couleur:         string;
     row:             Row[];
+    Hauteur?:         number;
     BackgroundImage: Image | null;
 }
 

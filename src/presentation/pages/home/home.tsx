@@ -28,9 +28,14 @@ const HomePage: React.FC = () => {
             <div style={{marginTop: "4rem"}}>
                 {homePage?.homePage.element.map((element, indexElement) => {
                     let cssInfo: CSSProperties = {};
+                    if (element.Hauteur) {
+                        cssInfo = {... cssInfo,
+                            height: element.Hauteur + "vh",
+                        }
+                    }
                     if (element.BackgroundImage) {
 
-                        cssInfo = {
+                        cssInfo = {... cssInfo,
                             backgroundImage: `url(${strapiURL + element.BackgroundImage.url})`,
                             backgroundSize: "cover",
                             backgroundPosition: "center",
@@ -39,7 +44,7 @@ const HomePage: React.FC = () => {
                         }
                     }
                     else if (element.couleur) {
-                        cssInfo = {
+                        cssInfo = {... cssInfo,
                             backgroundColor: element.couleur,
                             alignItems: "center",
                         };

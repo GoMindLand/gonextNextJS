@@ -23,6 +23,7 @@ export class FetchHomePageUseCase {
       ... on ComponentStructureSection {
         id
         couleur
+        Hauteur
         row {
           name
           id
