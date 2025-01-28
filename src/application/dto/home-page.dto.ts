@@ -61,6 +61,8 @@ export interface Row {
     name:   string;
     id:     string;
     TextPosition: string;
+    PaddingTop: number;
+    PaddingBottom: number;
     Column: Column[];
 }
 

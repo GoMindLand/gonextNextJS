@@ -48,7 +48,7 @@ const HomePage: React.FC = () => {
                         <div style={cssInfo}>
                             {element.row.map((uniqueRow, indexRow) => {
                                 return (<div className={"container text-" + uniqueRow.TextPosition} key={indexRow}>
-                                        <div className="row" key={indexRow}>
+                                        <div className={"row " + "pt-" + uniqueRow.PaddingTop + " " + "pb-" + uniqueRow.PaddingBottom } key={indexRow}>
                                             {uniqueRow.Column.map((uniqueColumn, indexColumn) => {
                                                 return (<div className={"col-lg-" + uniqueColumn.sizeDesktop + " col-sm-" + uniqueColumn.sizeMobile } key={indexColumn}>
                                                     {uniqueColumn.Cartes.map((carte: Carte, indexCarte) => {

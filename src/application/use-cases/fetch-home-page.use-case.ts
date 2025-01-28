@@ -27,6 +27,8 @@ export class FetchHomePageUseCase {
           name
           id
           TextPosition
+          PaddingTop
+          PaddingBottom
           Column {
             Bouton {
               id
