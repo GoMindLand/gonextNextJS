@@ -1,3 +1,1 @@
-//export const strapiURL = "http://localhost:1337";
-
-export const strapiURL = "https://gonextstrapibackend-production.up.railway.app";
+export const strapiURL = process.env.NEXT_PUBLIC_API_URL;
