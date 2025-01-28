@@ -1,6 +1,7 @@
 import {ApolloClient, gql, InMemoryCache, NormalizedCacheObject} from "@apollo/client";
 import {injectable} from "inversify";
 import {GraphQLClientInterface} from "@/domain/interfaces/graphql-client.interface";
+import {strapiURL} from "@/config/constant";
 
 @injectable()
 export class GraphQLClient implements GraphQLClientInterface {
@@ -8,7 +9,7 @@ export class GraphQLClient implements GraphQLClientInterface {
 
     constructor() {
         this.client = new ApolloClient({
-            uri: "http://localhost:1337/graphql", // Remplace par ton endpoint si différent
+            uri: strapiURL + "/graphql",
             cache: new InMemoryCache(),
         });
     }
