@@ -26,6 +26,7 @@ export class FetchHomePageUseCase {
         row {
           name
           id
+          TextPosition
           Column {
             Bouton {
               id

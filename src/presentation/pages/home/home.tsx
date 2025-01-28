@@ -47,7 +47,7 @@ const HomePage: React.FC = () => {
                     return (<section key={indexElement} className={indexElement === 0 ? "mt-5" : ""}>
                         <div style={cssInfo}>
                             {element.row.map((uniqueRow, indexRow) => {
-                                return (<div className="container text-start" key={indexRow}>
+                                return (<div className={"container text-" + uniqueRow.TextPosition} key={indexRow}>
                                         <div className="row" key={indexRow}>
                                             {uniqueRow.Column.map((uniqueColumn, indexColumn) => {
                                                 return (<div className={"col-lg-" + uniqueColumn.sizeDesktop + " col-sm-" + uniqueColumn.sizeMobile } key={indexColumn}>

@@ -60,6 +60,7 @@ export interface Medium {
 export interface Row {
     name:   string;
     id:     string;
+    TextPosition: string;
     Column: Column[];
 }
 
